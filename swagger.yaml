@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: Kanomi server
+  description: Our NodeJS express server hosted on Heroku platform.
+  version: 1.1.0
+
+servers:
+  - url: "{protocol}://local:3000/api/{version}"
+    description: a local host server
+    variables:
+      version:
+        enum:
+          - v1
+          - v2
+        default: http
+      protocol:
+        enum:
+          - http
+          - https
+  - url: "https://local:5000/api/v1"
+    description: a fallback server
+  - url: "https://appbar-server.herokuapp.com/api/v1"
+    description: a production server
+  - url: "https://appbar-server-staging-3e99f1c0b181.herokuapp.com/api/v1"
+    description: a staging server
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    bearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /lco:
+    get:
+      summary: returns a greet message from LCO
+      responses:
+        200:
+          description: All good
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "mystring"
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
